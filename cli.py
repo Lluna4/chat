@@ -19,6 +19,8 @@ cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 cliente.connect(ADDR)
 conectado = True
 
+usuario = input("Nombre de usuario: ")
+
 
 
 def recibir():
@@ -40,14 +42,18 @@ def enviar(msg): # codifica el mensaje (msg) y lo manda al servidor
     cliente.send(mensaje)
     #print(cliente.recv(2048).decode(FORMAT))
 
-
+enviar(f"/u {usuario}")
 
 x1 = threading.Thread(target=recibir)
 x1.start()
 
 while conectado == True:
-    msg = input(":")
+    msg = input("")
+
     enviar(msg)
+    if msg == "/desconectar":
+        conectado = False
+        quit()
     time.sleep(0.1)
     
 

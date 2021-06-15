@@ -25,15 +25,30 @@ clients_lock = threading.Lock()
 
 def bot2(conn, addr):
     conectado = True
-    while True:
+    usuario = ""
+    while conectado == True:
         
         msg = conn.recv(1024).decode(FORMAT)
         print(msg)
-        msg = msg.encode(FORMAT)
-        with clients_lock:
-            for client in clients:
-                client.send(msg)
-                print("Enviado!")
+        if "/u" in msg:
+            usuario = msg[3:]
+            print(usuario)
+        elif "/desconectar" in msg:
+            with clients_lock:
+                for client in clients:
+                    client.send(f"{usuario} se ha desconectado".encode(FORMAT))
+            conectado = False
+
+
+        else:
+            msg = f"{usuario} ha dicho {msg}"
+            msg = msg.encode(FORMAT)
+            
+            with clients_lock:
+                for client in clients:
+                    
+                    client.send(msg)
+                    print("Enviado!")
 
 
 
